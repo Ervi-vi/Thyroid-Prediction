@@ -2,71 +2,180 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ==========================================
+# ==========================================================
 # KONFIGURASI HALAMAN
-# ==========================================
+# ==========================================================
 
 st.set_page_config(
-    page_title="Prediction",
-    page_icon="🤖",
-    layout="wide"
+    page_title="Prediksi Kanker Tiroid",
+    page_icon="🩺",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-st.title("🤖 Prediksi Kekambuhan Kanker Tiroid")
+# ==========================================================
+# CSS
+# ==========================================================
+
+st.markdown("""
+<style>
+
+.main{
+    background-color:#F5F7FA;
+}
+
+.block-container{
+    padding-top:2rem;
+}
+
+.title{
+    font-size:40px;
+    font-weight:bold;
+    color:#1565C0;
+}
+
+.subtitle{
+    font-size:18px;
+    color:#555555;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0px 3px 12px rgba(0,0,0,0.10);
+    margin-bottom:15px;
+}
+
+.section{
+    font-size:24px;
+    font-weight:bold;
+    color:#1565C0;
+    margin-top:15px;
+    margin-bottom:10px;
+}
+
+hr{
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ==========================================================
+# LOAD MODEL
+# ==========================================================
+
+try:
+
+    model = joblib.load("models/model.pkl")
+    encoder = joblib.load("models/encoder.pkl")
+    scaler = joblib.load("models/scaler.pkl")
+
+    # Opsional, jika sudah dibuat saat training
+    try:
+        feature_names = joblib.load("models/features.pkl")
+    except:
+        feature_names = None
+
+    try:
+        target_encoder = joblib.load("models/target_encoder.pkl")
+    except:
+        target_encoder = None
+
+except Exception as e:
+
+    st.error(f"Gagal memuat model : {e}")
+    st.stop()
+
+# ==========================================================
+# SIDEBAR
+# ==========================================================
+
+with st.sidebar:
+
+    st.title("🩺 Informasi Model")
+
+    st.success("Model berhasil dimuat")
+
+    st.markdown("---")
+
+    st.write("**Algoritma**")
+    st.info("Random Forest")
+
+    st.write("**Target Prediksi**")
+    st.info("Recurred")
+
+    st.write("**Dataset**")
+    st.info("Thyroid_Diff.csv")
+
+    st.markdown("---")
+
+    st.caption("Universitas Respati Yogyakarta")
+
+# ==========================================================
+# HEADER
+# ==========================================================
+
+st.markdown(
+    '<p class="title">🩺 Sistem Prediksi Kekambuhan Kanker Tiroid</p>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<p class="subtitle">Masukkan data pasien untuk memperoleh hasil prediksi menggunakan Machine Learning.</p>',
+    unsafe_allow_html=True
+)
 
 st.markdown("---")
 
-# ==========================================
-# LOAD MODEL
-# ==========================================
-
-try:
-    model = joblib.load("model.pkl")
-    encoder = joblib.load("encoder.pkl")
-    scaler = joblib.load("scaler.pkl")
-except:
-    st.error("Model belum tersedia. Jalankan train_model.py terlebih dahulu.")
-    st.stop()
-
-# ==========================================
+# ==========================================================
 # FORM INPUT
-# ==========================================
+# ==========================================================
 
-st.subheader("Input Data Pasien")
+st.markdown(
+    '<p class="section">📋 Data Pasien</p>',
+    unsafe_allow_html=True
+)
 
-col1, col2 = st.columns(2)
+kiri, kanan = st.columns(2)
 
-with col1:
+# ==========================================================
+# KOLOM KIRI
+# ==========================================================
+
+with kiri:
 
     age = st.number_input(
-        "Age",
-        min_value=10,
-        max_value=100,
-        value=40
+        "Usia",
+        10,
+        100,
+        40
     )
 
     gender = st.selectbox(
-        "Gender",
-        ["F", "M"]
+        "Jenis Kelamin",
+        ["F","M"]
     )
 
     smoking = st.selectbox(
-        "Smoking",
-        ["No", "Yes"]
+        "Merokok",
+        ["No","Yes"]
     )
 
     hx_smoking = st.selectbox(
-        "Hx Smoking",
-        ["No", "Yes"]
+        "Riwayat Merokok",
+        ["No","Yes"]
     )
 
     hx_radiotherapy = st.selectbox(
-        "Hx Radiotherapy",
-        ["No", "Yes"]
+        "Riwayat Radioterapi",
+        ["No","Yes"]
     )
 
     thyroid_function = st.selectbox(
-        "Thyroid Function",
+        "Fungsi Tiroid",
         [
             "Normal",
             "Clinical Hyperthyroidism",
@@ -77,7 +186,7 @@ with col1:
     )
 
     physical_exam = st.selectbox(
-        "Physical Examination",
+        "Pemeriksaan Fisik",
         [
             "Single nodular goiter-left",
             "Single nodular goiter-right",
@@ -87,7 +196,11 @@ with col1:
         ]
     )
 
-with col2:
+# ==========================================================
+# KOLOM KANAN
+# ==========================================================
+
+with kanan:
 
     adenopathy = st.selectbox(
         "Adenopathy",
@@ -101,7 +214,7 @@ with col2:
     )
 
     pathology = st.selectbox(
-        "Pathology",
+        "Patologi",
         [
             "Micropapillary",
             "Papillary",
@@ -119,7 +232,7 @@ with col2:
     )
 
     risk = st.selectbox(
-        "Risk",
+        "Kategori Risiko",
         [
             "Low",
             "Intermediate",
@@ -158,7 +271,7 @@ with col2:
     )
 
     stage = st.selectbox(
-        "Stage",
+        "Stadium",
         [
             "I",
             "II",
@@ -169,7 +282,7 @@ with col2:
     )
 
     response = st.selectbox(
-        "Response",
+        "Respon Terapi",
         [
             "Excellent",
             "Indeterminate",
@@ -180,27 +293,25 @@ with col2:
 
 st.markdown("---")
 
-# ==========================================
-# TOMBOL PREDIKSI
-# ==========================================
-
-predict = st.button(
-    "🔍 Predict",
-    use_container_width=True
+prediksi = st.button(
+    "🔍 Prediksi Risiko Kekambuhan",
+    use_container_width=True,
+    type="primary"
 )
 
-# ==========================================
-# PREPROCESSING
-# ==========================================
+# ==========================================================
+# PROSES PREDIKSI
+# ==========================================================
 
-if predict:
+if prediksi:
 
     input_df = pd.DataFrame({
+
         "Age":[age],
         "Gender":[gender],
         "Smoking":[smoking],
         "Hx Smoking":[hx_smoking],
-        "Hx Radiothreapy":[hx_radiotherapy],
+        "Hx Radiothreapy":[hx_radiotherapy],   # Sesuaikan dengan nama kolom dataset
         "Thyroid Function":[thyroid_function],
         "Physical Examination":[physical_exam],
         "Adenopathy":[adenopathy],
@@ -212,179 +323,235 @@ if predict:
         "M":[M],
         "Stage":[stage],
         "Response":[response]
+
     })
 
-    # Encoding sesuai encoder saat training
+    # ===============================
+    # Encoding
+    # ===============================
+
     for col in input_df.columns:
 
         if col in encoder:
 
             try:
-                input_df[col] = encoder[col].transform(input_df[col])
-            except:
+
+                input_df[col] = encoder[col].transform(
+                    input_df[col].astype(str)
+                )
+
+            except Exception:
 
                 st.error(
-                    f"Nilai '{input_df[col][0]}' pada kolom '{col}' tidak dikenali."
+                    f"Nilai pada kolom '{col}' tidak sesuai dengan data training."
                 )
+
                 st.stop()
 
+    # ===============================
+    # Menyamakan urutan fitur
+    # ===============================
+
+    if feature_names is not None:
+
+        input_df = input_df[feature_names]
+
+    # ===============================
     # Normalisasi
+    # ===============================
+
     input_scaled = scaler.transform(input_df)
 
-    # Simpan agar dipakai pada Tahap 5B
-    st.session_state["input_scaled"] = input_scaled
-    st.session_state["input_df"] = input_df
+    # ===============================
+    # Prediksi
+    # ===============================
 
-    st.success("Data pasien berhasil diproses dan siap diprediksi.")
-# ==========================================
-# HASIL PREDIKSI
-# ==========================================
+    prediksi_model = model.predict(input_scaled)
 
-if predict:
+    probabilitas = model.predict_proba(input_scaled)[0]
 
-    prediction = model.predict(input_scaled)[0]
+    st.session_state["hasil"] = hasil
+    st.session_state["probabilitas"] = probabilitas
+    st.session_state["input_pasien"] = input_df.copy()
 
-    probability = model.predict_proba(input_scaled)[0]
+    st.success("✅ Prediksi berhasil dilakukan.")
 
-    st.markdown("---")
+# ==========================================================
+# TAMPILKAN HASIL
+# ==========================================================
 
-    st.subheader("📋 Hasil Prediksi")
+if "hasil" in st.session_state:
 
-    col1, col2 = st.columns(2)
+    hasil = st.session_state["hasil"]
 
-    with col1:
-
-        if prediction == 0:
-
-            st.success("🟢 Prediksi : No Recurrence")
-
-        else:
-
-            st.error("🔴 Prediksi : Recurrence")
-
-    with col2:
-
-        st.metric(
-            "Confidence",
-            f"{max(probability)*100:.2f}%"
-        )
-
-# ==========================================
-# PROBABILITAS
-# ==========================================
-
-    st.subheader("📊 Probabilitas Prediksi")
-
-    prob_df = pd.DataFrame({
-
-        "Kategori":[
-            "No Recurrence",
-            "Recurrence"
-        ],
-
-        "Probabilitas (%)":[
-            probability[0]*100,
-            probability[1]*100
-        ]
-
-    })
-
-    st.bar_chart(
-        prob_df.set_index("Kategori")
-    )
-
-# ==========================================
-# DATA PASIEN
-# ==========================================
-
-    st.subheader("🧾 Ringkasan Data Pasien")
-
-    tampil = pd.DataFrame({
-
-        "Variabel":[
-            "Age",
-            "Gender",
-            "Smoking",
-            "Hx Smoking",
-            "Hx Radiotherapy",
-            "Thyroid Function",
-            "Physical Examination",
-            "Adenopathy",
-            "Pathology",
-            "Focality",
-            "Risk",
-            "T",
-            "N",
-            "M",
-            "Stage",
-            "Response"
-        ],
-
-        "Nilai":[
-            age,
-            gender,
-            smoking,
-            hx_smoking,
-            hx_radiotherapy,
-            thyroid_function,
-            physical_exam,
-            adenopathy,
-            pathology,
-            focality,
-            risk,
-            T,
-            N,
-            M,
-            stage,
-            response
-        ]
-
-    })
-
-    st.table(tampil)
-
-# ==========================================
-# REKOMENDASI
-# ==========================================
-
-    st.subheader("💡 Rekomendasi")
-
-    if prediction == 0:
-
-        st.success("""
-
-Pasien diprediksi **tidak mengalami kekambuhan kanker tiroid**.
-
-Tetap disarankan untuk:
-
-- Melakukan kontrol rutin sesuai jadwal dokter.
-- Menjaga pola hidup sehat.
-- Mengonsumsi obat sesuai anjuran.
-- Melakukan pemeriksaan laboratorium secara berkala.
-
-""")
-
-    else:
-
-        st.warning("""
-
-Pasien diprediksi **berpotensi mengalami kekambuhan kanker tiroid**.
-
-Disarankan untuk:
-
-- Segera berkonsultasi dengan dokter spesialis.
-- Melakukan pemeriksaan lanjutan.
-- Menjalani evaluasi terapi.
-- Melakukan pemantauan secara berkala.
-
-""")
-
-# ==========================================
-# FOOTER
-# ==========================================
+    probabilitas = st.session_state["probabilitas"]
 
     st.markdown("---")
 
-    st.caption(
-        "Prediction generated using Random Forest Classifier"
+    st.header("📊 Hasil Prediksi")
+
+if hasil == "No" or hasil == 0:
+
+    st.success("## 🟢 Risiko Rendah")
+
+    st.write(
+        "Model memprediksi pasien **tidak mengalami kekambuhan kanker tiroid**."
     )
+
+else:
+
+    st.error("## 🔴 Risiko Tinggi")
+
+    st.write(
+        "Model memprediksi pasien **berpotensi mengalami kekambuhan kanker tiroid**."
+    )
+
+confidence = max(probabilitas)
+
+st.metric(
+
+    "Tingkat Keyakinan Model",
+
+    f"{confidence*100:.2f}%"
+
+)
+
+import plotly.express as px
+
+prob_df = pd.DataFrame({
+
+    "Kategori":[
+
+        "Tidak Kambuh",
+
+        "Kambuh"
+
+    ],
+
+    "Probabilitas":[
+
+        probabilitas[0]*100,
+
+        probabilitas[1]*100
+
+    ]
+
+})
+
+fig = px.bar(
+
+    prob_df,
+
+    x="Kategori",
+
+    y="Probabilitas",
+
+    color="Kategori",
+
+    text="Probabilitas"
+
+)
+
+fig.update_traces(
+
+    texttemplate="%{text:.2f}%",
+
+    textposition="outside"
+
+)
+
+st.plotly_chart(
+
+    fig,
+
+    use_container_width=True
+
+)
+
+st.subheader("📋 Ringkasan Data Pasien")
+
+ringkasan = pd.DataFrame({
+
+    "Parameter":[
+
+        "Usia",
+
+        "Jenis Kelamin",
+
+        "Merokok",
+
+        "Riwayat Merokok",
+
+        "Riwayat Radioterapi",
+
+        "Fungsi Tiroid",
+
+        "Pemeriksaan Fisik",
+
+        "Adenopathy",
+
+        "Patologi",
+
+        "Focality",
+
+        "Kategori Risiko",
+
+        "Tumor",
+
+        "Node",
+
+        "Metastasis",
+
+        "Stadium",
+
+        "Response"
+
+    ],
+
+    "Nilai":[
+
+        age,
+
+        "Perempuan" if gender=="F" else "Laki-laki",
+
+        "Ya" if smoking=="Yes" else "Tidak",
+
+        "Ya" if hx_smoking=="Yes" else "Tidak",
+
+        "Ya" if hx_radiotherapy=="Yes" else "Tidak",
+
+        thyroid_function,
+
+        physical_exam,
+
+        adenopathy,
+
+        pathology,
+
+        focality,
+
+        risk,
+
+        T,
+
+        N,
+
+        M,
+
+        stage,
+
+        response
+
+    ]
+
+})
+
+st.dataframe(
+
+    ringkasan,
+
+    use_container_width=True,
+
+    hide_index=True
+
+)
