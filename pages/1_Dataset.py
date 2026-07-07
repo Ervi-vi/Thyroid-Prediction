@@ -122,4 +122,4 @@ st.write(list(df.columns))
 # =====================================
 
 st.markdown("---")
-st.caption("Thyroid Cancer Recurrence Prediction System")
+st.caption("© 2026 | Ervi | Thyroid Prediction System")
