@@ -40,31 +40,52 @@ col1, col2 = st.columns(2)
 with col1:
 
     age = st.number_input(
-        "Usia",
+        "Usia (Tahun)",
         min_value=10,
         max_value=100,
-        value=40
-    )
+        value=40,
+        step=1,
+        help="Masukkan usia pasien dalam satuan tahun."
+)
 
-    gender = st.selectbox(
-        "Jenis Kelamin",
-        ["F", "M"]
-    )
+    gender_option = st.selectbox(
+    "Jenis Kelamin",
+    [
+        "Perempuan",
+        "Laki-laki"
+    ]
+)
+    gender = "F" if gender_option == "Perempuan" else "M"
 
-    smoking = st.selectbox(
-        "Apakah Anda Perokok?",
-        ["No", "Yes"]
-    )
+    smoking_option = st.radio(
+    "Apakah pasien saat ini merokok?",
+    [
+        "Tidak",
+        "Ya"
+    ],
+    horizontal=True
+)
+    smoking = "Yes" if smoking_option == "Ya" else "No"
 
-    hx_smoking = st.selectbox(
-        "Apakah Anda Pernah Merokok?",
-        ["No", "Yes"]
-    )
+    hx_smoking_option = st.radio(
+    "Apakah pasien memiliki riwayat merokok?",
+    [
+        "Tidak",
+        "Ya"
+    ],
+    horizontal=True
+)
+    hx_smoking = "Yes" if hx_smoking_option == "Ya" else "No"
 
-    hx_radiotherapy = st.selectbox(
-        "Apakah Anda Pernah Radioterapi?",
-        ["No", "Yes"]
-    )
+    hx_radiotherapy_option = st.radio(
+    "Apakah pasien pernah menjalani radioterapi?",
+    [
+        "Tidak",
+        "Ya"
+    ],
+    horizontal=True
+)
+    hx_radiotherapy = "Yes" if hx_radiotherapy_option == "Ya" else "No"
 
     thyroid_function = st.selectbox(
         "Fungsi Tiroid",
