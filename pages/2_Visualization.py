@@ -223,4 +223,4 @@ with st.expander("ℹ Informasi Visualisasi"):
 
 st.markdown("---")
 
-st.caption("Developed by Ervi | Universitas Respati Yogyakarta")
+st.caption("© 2026 | Ervi | Thyroid Prediction System")
