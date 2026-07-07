@@ -51,11 +51,12 @@ encoder = {}
 
 for col in df.columns:
 
-    if df[col].dtype == "object":
+    # Semua kolom selain numerik akan di-encode
+    if not pd.api.types.is_numeric_dtype(df[col]):
 
         le = LabelEncoder()
 
-        df[col] = le.fit_transform(df[col])
+        df[col] = le.fit_transform(df[col].astype(str))
 
         encoder[col] = le
 
