@@ -45,16 +45,20 @@ pilihan = st.sidebar.selectbox(
 
 st.subheader(f"Distribusi {pilihan}")
 
+count_df = (
+    df[pilihan]
+    .value_counts()
+    .reset_index(name="Jumlah")
+)
+
+count_df.columns = [pilihan, "Jumlah"]
+
 bar = px.bar(
-    df[pilihan].value_counts().reset_index(),
-    x="index",
-    y=pilihan,
-    labels={
-        "index": pilihan,
-        pilihan: "Jumlah"
-    },
-    color="index",
-    text=pilihan
+    count_df,
+    x=pilihan,
+    y="Jumlah",
+    color=pilihan,
+    text="Jumlah"
 )
 
 bar.update_layout(showlegend=False)
@@ -68,8 +72,9 @@ st.plotly_chart(bar, use_container_width=True)
 st.subheader(f"Pie Chart {pilihan}")
 
 pie = px.pie(
-    df,
+    count_df,
     names=pilihan,
+    values="Jumlah",
     hole=0.45
 )
 
@@ -110,12 +115,20 @@ st.plotly_chart(box, use_container_width=True)
 
 st.subheader("Distribusi Target (Recurred)")
 
+target_df = (
+    df["Recurred"]
+    .value_counts()
+    .reset_index(name="Jumlah")
+)
+
+target_df.columns = ["Recurred", "Jumlah"]
+
 target = px.bar(
-    df["Recurred"].value_counts().reset_index(),
-    x="index",
-    y="Recurred",
-    color="index",
-    text="Recurred"
+    target_df,
+    x="Recurred",
+    y="Jumlah",
+    color="Recurred",
+    text="Jumlah"
 )
 
 target.update_layout(showlegend=False)
