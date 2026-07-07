@@ -64,9 +64,13 @@ Nama : Ervi
 
 Program Studi : Informatika
 
+Mata Kuliah : Data Science For Health
+
 Universitas Respati Yogyakarta
+
+2026
 """)
 
 st.markdown("---")
 
-st.caption("© 2026 Thyroid Prediction System")
+st.caption("© 2026 | Ervi | Thyroid Prediction System")
