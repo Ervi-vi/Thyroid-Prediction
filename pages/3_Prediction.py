@@ -48,12 +48,13 @@ with col1:
         help="Masukkan usia pasien dalam satuan tahun."
 )
 
-    gender_option = st.selectbox(
+    gender_option = st.radio(
     "Jenis Kelamin",
     [
         "Perempuan",
         "Laki-laki"
-    ]
+    ],
+        horizontal=True
 )
     gender = "F" if gender_option == "Perempuan" else "M"
 
