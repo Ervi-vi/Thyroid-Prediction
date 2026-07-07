@@ -136,29 +136,37 @@ target.update_layout(showlegend=False)
 st.plotly_chart(target, use_container_width=True)
 
 # ==========================================
-# KORELASI
+# HEATMAP KORELASI
 # ==========================================
 
 st.subheader("Heatmap Korelasi")
 
 data_corr = df.copy()
 
-# Encoding otomatis
+# Ubah semua kolom non numerik menjadi kode angka
 for col in data_corr.columns:
-    if data_corr[col].dtype == "object":
-        data_corr[col] = data_corr[col].astype("category").cat.codes
 
-corr = data_corr.corr()
+    if not pd.api.types.is_numeric_dtype(data_corr[col]):
+
+        data_corr[col] = (
+            data_corr[col]
+            .astype("category")
+            .cat.codes
+        )
+
+corr = data_corr.corr(numeric_only=True)
 
 heatmap = px.imshow(
     corr,
-    text_auto=True,
+    text_auto=".2f",
     aspect="auto",
     color_continuous_scale="Blues"
 )
 
-st.plotly_chart(heatmap, use_container_width=True)
-
+st.plotly_chart(
+    heatmap,
+    use_container_width=True
+)
 # ==========================================
 # SCATTER PLOT
 # ==========================================
