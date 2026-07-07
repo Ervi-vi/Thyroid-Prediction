@@ -6,7 +6,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("ℹ Tentang Aplikasi")
+st.title("Tentang Aplikasi")
 
 st.markdown("---")
 
