@@ -39,42 +39,26 @@ col1, col2 = st.columns(2)
 with col1:
 
     age = st.number_input(
-        "Umur",
+        "Age",
         min_value=10,
         max_value=100,
         value=40
     )
 
-    gender = st.radio(
-    "Jenis Kelamin",
-    ["F", "M"],
-    horizontal=True,
-    format_func=lambda x: {
-        "F": "Perempuan",
-        "M": "Laki-laki"
-    }[x]
-)
+    gender = st.selectbox(
+        "Gender",
+        ["F", "M"]
+    )
 
-    smoking = st.radio(
-    "Apakah pasien merokok?",
-    ["Yes", "No"],
-    horizontal=True,
-    format_func=lambda x: {
-        "Yes": "Ya",
-        "No": "Tidak"
-    }[x]
-)
-)
+    smoking = st.selectbox(
+        "Smoking",
+        ["No", "Yes"]
+    )
 
-    hx_smoking = st.radio(
-    "Apakah pasien memiliki riwayat merokok?",
-    ["Yes", "No"],
-    horizontal=True,
-    format_func=lambda x: {
-        "Yes": "Ya",
-        "No": "Tidak"
-    }[x]
-)
+    hx_smoking = st.selectbox(
+        "Hx Smoking",
+        ["No", "Yes"]
+    )
 
     hx_radiotherapy = st.selectbox(
         "Hx Radiotherapy",
