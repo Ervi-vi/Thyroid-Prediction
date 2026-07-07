@@ -7,12 +7,13 @@ import joblib
 # ==========================================
 
 st.set_page_config(
-    page_title="Prediction",
+    page_title="Prediksi Kekambuhan Kanker Tiroid",
     page_icon="🤖",
     layout="wide"
 )
 
-st.title("🤖 Prediksi Kekambuhan Kanker Tiroid")
+st.title("🤖 Sistem Prediksi Kekambuhan Kanker Tiroid")
+st.caption("Silakan masukkan data pasien untuk melakukan prediksi.")
 
 st.markdown("---")
 
@@ -39,34 +40,34 @@ col1, col2 = st.columns(2)
 with col1:
 
     age = st.number_input(
-        "Age",
+        "Usia",
         min_value=10,
         max_value=100,
         value=40
     )
 
     gender = st.selectbox(
-        "Gender",
+        "Jenis Kelamin",
         ["F", "M"]
     )
 
     smoking = st.selectbox(
-        "Smoking",
+        "Apakah Anda Perokok?",
         ["No", "Yes"]
     )
 
     hx_smoking = st.selectbox(
-        "Hx Smoking",
+        "Apakah Anda Pernah Merokok?",
         ["No", "Yes"]
     )
 
     hx_radiotherapy = st.selectbox(
-        "Hx Radiotherapy",
+        "Apakah Anda Pernah Radioterapi?",
         ["No", "Yes"]
     )
 
     thyroid_function = st.selectbox(
-        "Thyroid Function",
+        "Fungsi Tiroid",
         [
             "Normal",
             "Clinical Hyperthyroidism",
@@ -77,7 +78,7 @@ with col1:
     )
 
     physical_exam = st.selectbox(
-        "Physical Examination",
+        "Pemeriksaan Fisik",
         [
             "Single nodular goiter-left",
             "Single nodular goiter-right",
@@ -90,7 +91,7 @@ with col1:
 with col2:
 
     adenopathy = st.selectbox(
-        "Adenopathy",
+        "Adenopati",
         [
             "No",
             "Left",
@@ -101,7 +102,7 @@ with col2:
     )
 
     pathology = st.selectbox(
-        "Pathology",
+        "Patologi",
         [
             "Micropapillary",
             "Papillary",
