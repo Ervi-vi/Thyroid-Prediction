@@ -203,7 +203,6 @@ st.write("")
 st.markdown("""
 <hr>
 <p class='footer'>
-Developed by <b>Ervi</b><br>
-Universitas Respati Yogyakarta
+© 2026 | Ervi | Thyroid Prediction System
 </p>
 """, unsafe_allow_html=True)
