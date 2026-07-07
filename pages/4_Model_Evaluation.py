@@ -275,4 +275,4 @@ st.dataframe(
 
 st.markdown("---")
 
-st.caption("Random Forest Evaluation | Developed by Ervi")
+st.caption("© 2026 | Ervi | Thyroid Prediction System")
